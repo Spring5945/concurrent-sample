@@ -1,4 +1,4 @@
-package com.zhengyu.classloader;
+package com.zhengyu.threadpool;
 
 import com.google.common.collect.Lists;
 
@@ -24,26 +24,21 @@ public class MyThreadPool {
 
         List<CompletableFuture<Integer>> completableFutureList = Lists.newArrayList();
 
-        for (int i = 0; i < 16; i++) {
-            try {
-                CompletableFuture<Integer> integerCompletableFuture = CompletableFuture.supplyAsync(() -> {
-                    try {
-                        Thread.sleep(200);
-                        System.out.println(Thread.currentThread().getName() + " run");
-                        Random random = new Random();
-                        int i1 = random.nextInt();
-                        return i1;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return 0;
-                }, threadPoolExecutor);
+        for (int i = 0; i < 15; i++) {
+            CompletableFuture<Integer> integerCompletableFuture = CompletableFuture.supplyAsync(() -> {
+                try {
+                    Thread.sleep(200);
+                    System.out.println(Thread.currentThread().getName() + " run");
+                    Random random = new Random();
+                    int i1 = random.nextInt();
+                    return i1;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }, threadPoolExecutor);
 
-                completableFutureList.add(integerCompletableFuture);
-            } catch (Exception e) {
-
-            }
-
+            completableFutureList.add(integerCompletableFuture);
             System.out.println("核心线程数" + threadPoolExecutor.getCorePoolSize());
             System.out.println("线程池数" + threadPoolExecutor.getPoolSize());
             System.out.println("队列任务数" + threadPoolExecutor.getQueue().size());
