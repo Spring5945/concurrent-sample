@@ -1,8 +1,13 @@
 package com.zhengyu.threadlocal;
 
-public class LanguageInheritableThreadLocal {
+import com.alibaba.ttl.TransmittableThreadLocal;
 
-    static InheritableThreadLocal<LanguageContext> languageContext = new InheritableThreadLocal<LanguageContext>() {
+/**
+ * Created by zhengyu.nie on 2018/8/30.
+ */
+public class LanguageTransmittableThreadLocal {
+
+    static TransmittableThreadLocal<LanguageContext> languageContext = new TransmittableThreadLocal<LanguageContext>() {
         @Override
         protected LanguageContext initialValue() {
             return super.initialValue();

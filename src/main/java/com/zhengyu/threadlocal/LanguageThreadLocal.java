@@ -1,7 +1,5 @@
 package com.zhengyu.threadlocal;
 
-import java.util.Optional;
-
 public class LanguageThreadLocal {
     private static ThreadLocal<LanguageContext> languageThreadLocal = new ThreadLocal<LanguageContext>() {
         @Override
@@ -20,7 +18,8 @@ public class LanguageThreadLocal {
     }
 
     public static LanguageContext getLanguageContext() {
-        return Optional.ofNullable(languageThreadLocal.get()).orElseThrow(NullPointerException::new);
+//        return Optional.ofNullable(languageThreadLocal.get()).orElseThrow(NullPointerException::new);
+        return languageThreadLocal.get();
     }
 
 }
