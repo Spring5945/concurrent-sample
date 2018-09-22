@@ -11,33 +11,8 @@ public class LanguageContext {
         code = builder.code;
     }
 
-
-    public static final class Builder {
-        private String language;
-        private String locale;
-        private String code;
-
-        public Builder() {
-        }
-
-        public Builder language(String val) {
-            language = val;
-            return this;
-        }
-
-        public Builder locale(String val) {
-            locale = val;
-            return this;
-        }
-
-        public Builder code(String val) {
-            code = val;
-            return this;
-        }
-
-        public LanguageContext build() {
-            return new LanguageContext(this);
-        }
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
     public String getLanguage() {
@@ -59,5 +34,33 @@ public class LanguageContext {
                 ", locale='" + locale + '\'' +
                 ", code='" + code + '\'' +
                 '}';
+    }
+
+    public static final class Builder {
+        private String language;
+        private String locale;
+        private String code;
+
+        private Builder() {
+        }
+
+        public Builder withLanguage(String val) {
+            language = val;
+            return this;
+        }
+
+        public Builder withLocale(String val) {
+            locale = val;
+            return this;
+        }
+
+        public Builder withCode(String val) {
+            code = val;
+            return this;
+        }
+
+        public LanguageContext build() {
+            return new LanguageContext(this);
+        }
     }
 }

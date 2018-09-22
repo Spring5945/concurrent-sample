@@ -1,7 +1,5 @@
 package com.zhengyu.threadlocal;
 
-import java.util.Optional;
-
 public class LanguageThreadLocal {
     private static ThreadLocal<LanguageContext> languageThreadLocal = new ThreadLocal<LanguageContext>() {
         @Override
