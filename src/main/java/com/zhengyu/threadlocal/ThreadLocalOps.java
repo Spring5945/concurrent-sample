@@ -1,9 +1,8 @@
 package com.zhengyu.threadlocal;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import com.alibaba.ttl.threadpool.TtlExecutors;
+
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ThreadLocalOps {
@@ -17,23 +16,47 @@ public class ThreadLocalOps {
     }
 
     private static void threadLocalWithForkThread() {
-        LanguageThreadLocal.setLanguageContext(new LanguageContext.Builder().language("en-us").code("EN").locale("en-hk").build());
-        new Thread(() -> System.out.println(LanguageThreadLocal.getLanguageContext())).start();
+        LanguageTransmittableThreadLocal.setLanguageContext(new LanguageContext.Builder().language("en-us").code("EN").locale("en-hk").build());
+        new Thread(() -> System.out.println(LanguageTransmittableThreadLocal.getLanguageContext())).start();
     }
 
     private static void threadLocalWithThreadPool() {
         ThreadPoolExecutor threadPoolExecutor = initialThreadPool();
+//            if (finalI % 2 == 0) {
+//                LanguageTransmittableThreadLocal.setLanguageContext(new LanguageContext.Builder().language("en-us").code("EN").locale("en-hk").build());
+//            }
+//            CompletableFuture.runAsync(() -> {
+//                System.out.println(finalI + "s1" + LanguageTransmittableThreadLocal.getLanguageContext());
+//                CompletableFuture.runAsync(() -> {
+//                    System.out.println(finalI + "s2" + LanguageTransmittableThreadLocal.getLanguageContext());
+//                }, threadPoolExecutor);
+//            }, threadPoolExecutor);
+//            LanguageTransmittableThreadLocal.remove();
+
+        Executor ttlExecutor = TtlExecutors.getTtlExecutor(threadPoolExecutor);
+
         for (int i = 0; i < 2; i++) {
-            int finalI = i;
+            LanguageTransmittableThreadLocal.setLanguageContext(new LanguageContext.Builder().language("en-us" + i).code("EN").locale("en-hk").build());
+
             CompletableFuture.runAsync(() -> {
-                if (finalI % 2 == 0) {
-                    LanguageThreadLocal.setLanguageContext(new LanguageContext.Builder().language("en-us").code("EN").locale("en-hk").build());
-                }
-                System.out.println(LanguageThreadLocal.getLanguageContext());
-                LanguageThreadLocal.remove();
-            }, threadPoolExecutor);
+                System.out.println("t1-" + LanguageTransmittableThreadLocal.getLanguageContext());
+
+            }, ttlExecutor);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+
+            CompletableFuture.runAsync(() -> {
+                System.out.println("t2-" + LanguageTransmittableThreadLocal.getLanguageContext());
+            }, ttlExecutor);
+
+            System.out.println("main-" + i + LanguageTransmittableThreadLocal.getLanguageContext());
+//            LanguageInheritableThreadLocal.remove();
 
         }
+
 
 //        for (int i = 0; i < 2; i++) {
 //            int finalI = i;

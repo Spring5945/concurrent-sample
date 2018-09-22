@@ -20,7 +20,7 @@ public class LanguageThreadLocal {
     }
 
     public static LanguageContext getLanguageContext() {
-        return Optional.ofNullable(languageThreadLocal.get()).orElseThrow(NullPointerException::new);
+        return languageThreadLocal.get();
     }
 
 }
